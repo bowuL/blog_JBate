@@ -1,5 +1,6 @@
 package com.blog.dao;
 
+import ch.qos.logback.classic.db.names.TableName;
 import com.blog.model.User;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import org.apache.ibatis.annotations.*;
  *
  * 用户持久层
  */
+@Mapper
 public interface UserDao {
     String TABLE_NAME = "user";
     String INSERT_FIELDS = "name, password, salt, head_url, role";
@@ -23,7 +25,15 @@ public interface UserDao {
     List<User> findAll();
 
     @Insert({"insert into", TABLE_NAME, "(", INSERT_FIELDS, ") values （#{name}, #{password}, #{salt}, #{head_url}, #{role}）"})
-    public void insertUser(User, user);
+    public void insertUser(User user);
 
+    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where id=#{id}"})
+    public User selectById(int id);
+
+    @Select({"select", SELECT_FIELDS, "from", TABLE_NAME, "where name=#{name}"})
+    public User selectByName(String name);
+
+    @Delete({"delete from", TABLE_NAME, "where id=#{id}"})
+    public void deleteById(int id);
 
 }
